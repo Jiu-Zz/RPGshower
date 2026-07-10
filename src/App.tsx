@@ -1,6 +1,8 @@
 import "./App.css";
+import { sampleCharacter } from "./data/sampleCharacter";
 
 function App() {
+  const character = sampleCharacter;
   return (
     <main className="app-shell">
       <header className="topbar">
@@ -22,18 +24,24 @@ function App() {
         </aside>
         <section className="preview-panel" aria-label="角色预览">
           <article className="character-card">
+            {/* 角色卡顶部：头像、称号、名字、简介、标签 */}
             <header className="character-header">
-              <div className="avater-initial">艾</div>
-              <div className="character-tital">
-                <p className="eyebrow">流浪法师</p>
-                <h2>艾琳</h2>
-                <p className="character-summary">
-                  一位寻找失落星图的年轻法师，她把旅途中的传闻，星象和古老符文都记录在随身笔记里
-                </p>
+              {/* 从角色数据中读取头像文字 */}
+              <div className="avatar-initial">
+                {character.profile.avatarText}
+              </div>
+
+              <div className="character-title">
+                <p className="eyebrow">{character.profile.title}</p>
+                <h2>{character.profile.name}</h2>
+
+                <p className="character-summary">{character.profile.summary}</p>
+
+                {/* 用 map 把 tags 数组转换成多个 span */}
                 <div className="tag-list" aria-label="角色标签">
-                  <span>法师</span>
-                  <span>旅行者</span>
-                  <span>星象</span>
+                  {character.profile.tags.map((tag) => (
+                    <span key={tag}>{tag}</span>
+                  ))}
                 </div>
               </div>
             </header>
@@ -44,104 +52,94 @@ function App() {
               <dl className="basic-grid">
                 <div>
                   <dt>种族</dt>
-                  <dt>人类</dt>
+                  <dd>{character.basics.species}</dd>
                 </div>
                 <div>
                   <dt>职业</dt>
-                  <dt>法师</dt>
+                  <dd>{character.basics.className}</dd>
                 </div>
                 <div>
                   <dt>等级</dt>
-                  <dt>5</dt>
+                  <dd>{character.basics.level}</dd>
+                </div>
+                <div>
+                  <dt>出身</dt>
+                  <dd>{character.basics.origin}</dd>
                 </div>
                 <div>
                   <dt>阵营</dt>
-                  <dt>中立善良</dt>
+                  <dd>{character.basics.alignment}</dd>
                 </div>
               </dl>
             </section>
 
+            {/* 资源区域：从 character.resources 数组生成 */}
             <section className="card-section">
               <h3>资源</h3>
 
               <div className="resource-list">
-                <div className="resource">
-                  <div className="resource_label">
-                    <span>生命</span>
-                    <strong>32 / 45</strong>
-                  </div>
-                  <div className="resource-track">
-                    <div
-                      className="resource-fill resource-fill-red"
-                      style={{ width: "71%" }}
-                    />
-                  </div>
-                </div>
+                {character.resources.map((resource) => {
+                  // 计算当前资源百分比。
+                  // 例如生命 32 / 45，大约是 71%。
+                  const percent =
+                    resource.max > 0
+                      ? Math.round((resource.current / resource.max) * 100)
+                      : 0;
 
-                <div className="resource">
-                  <div className="resource_label">
-                    <span>法力</span>
-                    <strong>18 / 30</strong>
-                  </div>
-                  <div className="resource-track">
-                    <div
-                      className="resource-fill resource-fill-blue"
-                      style={{ width: "60%" }}
-                    />
-                  </div>
-                </div>
+                  return (
+                    <div className="resource" key={resource.id}>
+                      <div className="resource-label">
+                        <span>{resource.label}</span>
+                        <strong>
+                          {resource.current} / {resource.max}
+                        </strong>
+                      </div>
+
+                      <div className="resource-track">
+                        <div
+                          className={`resource-fill resource-fill-${resource.color}`}
+                          style={{ width: `${percent}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </section>
 
+            {/* 属性区域：从 character.attributes 数组生成 */}
             <section className="card-section">
               <h3>属性</h3>
 
               <div className="attribute-grid">
-                <div>
-                  <span>力量</span>
-                  <strong>8</strong>
-                </div>
-                <div>
-                  <span>敏捷</span>
-                  <strong>12</strong>
-                </div>
-                <div>
-                  <span>体质</span>
-                  <strong>10</strong>
-                </div>
-                <div>
-                  <span>智力</span>
-                  <strong>17</strong>
-                </div>
-                <div>
-                  <span>感知</span>
-                  <strong>14</strong>
-                </div>
-                <div>
-                  <span>魅力</span>
-                  <strong>11</strong>
-                </div>
+                {character.attributes.map((attribute) => (
+                  <div key={attribute.id}>
+                    <span>{attribute.label}</span>
+                    <strong>{attribute.value}</strong>
+                  </div>
+                ))}
               </div>
             </section>
 
-            {/* 装备和技能区域：左右两列展示 */}
+            {/* 装备和技能区域：从 equipment / skills 数组生成 */}
             <section className="card-section two-column-section">
               {/* 装备列表 */}
               <div>
                 <h3>装备</h3>
 
                 <ul className="item-list">
-                  <li>
-                    <strong>星纹法杖</strong>
-                    <span>武器 · 已装备</span>
-                    <p>镶嵌着微光星石的长杖。</p>
-                  </li>
+                  {character.equipment.map((item) => (
+                    <li key={item.id}>
+                      <strong>{item.name}</strong>
 
-                  <li>
-                    <strong>旧皮革笔记</strong>
-                    <span>工具</span>
-                    <p>记录星象、传闻和未完成的地图。</p>
-                  </li>
+                      <span>
+                        {item.type}
+                        {item.equipped ? " · 已装备" : ""}
+                      </span>
+
+                      <p>{item.description}</p>
+                    </li>
+                  ))}
                 </ul>
               </div>
 
@@ -150,17 +148,17 @@ function App() {
                 <h3>技能</h3>
 
                 <ul className="item-list">
-                  <li>
-                    <strong>星火术</strong>
-                    <span>熟练 · 3 法力</span>
-                    <p>召唤一束星火攻击目标。</p>
-                  </li>
+                  {character.skills.map((skill) => (
+                    <li key={skill.id}>
+                      <strong>{skill.name}</strong>
 
-                  <li>
-                    <strong>星图解读</strong>
-                    <span>专家</span>
-                    <p>根据星象和古地图推断道路、季节与异常现象。</p>
-                  </li>
+                      <span>
+                        {[skill.level, skill.cost].filter(Boolean).join(" · ")}
+                      </span>
+
+                      <p>{skill.description}</p>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </section>
