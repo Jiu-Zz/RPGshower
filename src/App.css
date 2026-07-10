@@ -1,184 +1,127 @@
-.counter {
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
-
-  &:hover {
-    border-color: var(--accent-border);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
+/* :root 可以理解成整个页面的全局基础设置 */
+:root {
+  color: #1f2937;
+  background: #eef2f6;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
 }
 
-.hero {
-  position: relative;
-
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
-  }
-
-  .base {
-    width: 170px;
-    position: relative;
-    z-index: 0;
-  }
-
-  .framework,
-  .vite {
-    position: absolute;
-  }
-
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
-  }
-
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
-  }
+/* 让所有元素计算宽高时包含 padding 和 border，布局更直觉 */
+* {
+  box-sizing: border-box;
 }
 
-#center {
+/* body 是整个网页的身体，这里清掉浏览器默认外边距 */
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+/* 所有 button 的基础样式 */
+button {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #1f2937;
+  cursor: pointer;
+  font: inherit;
+  padding: 0.65rem 0.9rem;
+}
+
+/* 鼠标悬停按钮时改变边框颜色 */
+button:hover {
+  border-color: #64748b;
+}
+
+/* 整个应用的外壳 */
+.app-shell {
+  min-height: 100vh;
+  padding: 1.5rem;
+}
+
+/* 顶部栏：左边标题，右边按钮 */
+.topbar {
+  align-items: center;
   display: flex;
-  flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  flex-grow: 1;
-
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
+  gap: 1rem;
+  justify-content: space-between;
+  margin: 0 auto 1.5rem;
+  max-width: 1180px;
 }
 
-#next-steps {
+/* 小标题文字，比如“通用角色展示器” */
+.eyebrow {
+  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem;
+}
+
+/* 清理标题和段落默认顶部间距 */
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+/* 主标题 RPGshower */
+h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1;
+  margin-bottom: 0;
+}
+
+/* 顶部按钮区域 */
+.topbar-actions {
   display: flex;
-  border-top: 1px solid var(--border);
-  text-align: left;
+  gap: 0.75rem;
+}
 
-  & > div {
-    flex: 1 1 0;
-    padding: 32px;
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
-    }
+/* 主工作区：左边编辑区，右边预览区 */
+.workspace {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+  margin: 0 auto;
+  max-width: 1180px;
+}
+
+/* 左右两个面板的共同样式 */
+.editor-panel,
+.preview-panel {
+  background: #ffffff;
+  border: 1px solid #dbe3ec;
+  border-radius: 8px;
+  min-height: 320px;
+  padding: 1.25rem;
+}
+
+/* 面板里的说明文字 */
+.editor-panel p,
+.preview-panel p {
+  color: #64748b;
+  line-height: 1.7;
+}
+
+/* 屏幕较窄时，顶部栏和工作区改成上下排列 */
+@media (max-width: 760px) {
+  .app-shell {
+    padding: 1rem;
   }
 
-  .icon {
-    margin-bottom: 16px;
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 1024px) {
+  .topbar {
+    align-items: flex-start;
     flex-direction: column;
-    text-align: center;
-  }
-}
-
-#docs {
-  border-right: 1px solid var(--border);
-
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
-}
-
-#next-steps ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  gap: 8px;
-  margin: 32px 0 0;
-
-  .logo {
-    height: 18px;
   }
 
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-    .button-icon {
-      height: 18px;
-      width: 18px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
-}
-
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
-}
-
-.ticks {
-  position: relative;
-  width: 100%;
-
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
-  }
-
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
-  }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
+  .workspace {
+    grid-template-columns: 1fr;
   }
 }
