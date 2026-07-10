@@ -125,3 +125,234 @@ h1 {
     grid-template-columns: 1fr;
   }
 }
+
+/* 角色卡整体文字颜色 */
+.character-card {
+  color: #1f2937;
+}
+
+/* 角色头部：头像在左，文字信息在右 */
+.character-header {
+  align-items: flex-start;
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* 文字头像占位。后续如果支持头像图片，可以替换这一块 */
+.avatar-initial {
+  align-items: center;
+  aspect-ratio: 1;
+  background: #314158;
+  border-radius: 8px;
+  color: #f8fafc;
+  display: flex;
+  flex: 0 0 88px;
+  font-size: 2.5rem;
+  font-weight: 800;
+  justify-content: center;
+}
+
+/* 角色名字 */
+.character-title h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* 角色简介 */
+.character-summary {
+  color: #475569;
+  line-height: 1.7;
+  margin-bottom: 0.8rem;
+  max-width: 68ch;
+}
+
+/* 标签容器：允许自动换行 */
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* 单个标签 */
+.tag-list span {
+  background: #e0f2fe;
+  border: 1px solid #bae6fd;
+  border-radius: 999px;
+  color: #075985;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.25rem 0.55rem;
+}
+
+/* 角色卡内部的每个分区 */
+.card-section {
+  border-top: 1px solid #e2e8f0;
+  padding: 1.25rem 0;
+}
+
+/* 分区标题，比如“基础信息” */
+.card-section h3 {
+  font-size: 1rem;
+  margin: 0 0 0.9rem;
+}
+
+/* 基础信息网格 */
+.basic-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  margin: 0;
+}
+
+/* 每一个基础信息小块 */
+.basic-grid div {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.8rem;
+}
+
+/* dt 是字段名，比如“种族” */
+dt {
+  color: #64748b;
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+/* dd 是字段值，比如“人类” */
+dd {
+  color: #0f172a;
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+/* 小屏幕下，头像和文字改成上下排列 */
+@media (max-width: 760px) {
+  .character-header {
+    flex-direction: column;
+  }
+}
+
+/* 资源列表：多个资源条上下排列 */
+.resource-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+/* 资源条上方的文字：左边名称，右边数值 */
+.resource-label {
+  display: flex;
+  font-size: 0.92rem;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+
+/* 资源条的背景轨道 */
+.resource-track {
+  background: #e2e8f0;
+  border-radius: 999px;
+  height: 0.75rem;
+  overflow: hidden;
+}
+
+/* 资源条的实际填充部分 */
+.resource-fill {
+  border-radius: inherit;
+  height: 100%;
+}
+
+/* 红色资源条：这里用来表示生命 */
+.resource-fill-red {
+  background: #e11d48;
+}
+
+/* 蓝色资源条：这里用来表示法力 */
+.resource-fill-blue {
+  background: #2563eb;
+}
+
+/* 属性网格：和基础信息类似，自动分成多列 */
+.attribute-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+/* 单个属性格子 */
+.attribute-grid div {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.8rem;
+}
+
+/* 属性名称，比如“力量” */
+.attribute-grid span {
+  color: #64748b;
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+/* 属性数值，比如 17 */
+.attribute-grid strong {
+  color: #0f172a;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+/* 装备和技能的双列布局 */
+.two-column-section {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* 条目列表：去掉浏览器默认圆点和缩进 */
+.item-list {
+  display: grid;
+  gap: 0.75rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* 单个装备 / 技能条目 */
+.item-list li {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.85rem;
+}
+
+/* 名称和副信息单独占一行 */
+.item-list strong,
+.item-list span {
+  display: block;
+}
+
+/* 副信息，比如“武器 · 已装备” */
+.item-list span {
+  color: #64748b;
+  font-size: 0.82rem;
+  margin-top: 0.2rem;
+}
+
+/* 条目描述 */
+.item-list p {
+  color: #475569;
+  line-height: 1.6;
+  margin: 0.55rem 0 0;
+}
+
+/* 小屏幕下，装备和技能从左右两列改成上下排列 */
+@media (max-width: 760px) {
+  .two-column-section {
+    grid-template-columns: 1fr;
+  }
+}
