@@ -1,6 +1,9 @@
 // 这是一个示例角色数据。
 // 现在它还是写在代码里的对象，后续可以从 JSON 导入得到同样结构的数据。
-export const sampleCharacter = {
+
+import type { Character } from "../features/character/characterTypes";
+
+export const sampleCharacter: Character = {
   // schemaVersion 用来标记数据结构版本。
   // 以后如果角色 JSON 格式升级，可以靠它判断如何兼容旧数据。
   schemaVersion: "0.1.0",
