@@ -2,18 +2,24 @@ import type { ChangeEvent } from "react";
 import { useRef, useState } from "react";
 import "./App.css";
 import { sampleCharacter } from "./data/sampleCharacter";
+import { characterSchema } from "./features/character/characterSchema";
 import type { Character } from "./features/character/characterTypes";
 import { CharacterCard } from "./features/character/components/CharacterCard";
 
 function App() {
   // character 是当前角色，setCharacter 用来替换当前角色。
   const [character, setCharacter] = useState<Character>(sampleCharacter);
+
+  // 保存导入错误；null 表示当前没有错误。
+  const [importError, setImportError] = useState<string | null>(null);
+
   // 保存隐藏文件输入框对应的 HTML 元素。
   // 初始阶段元素还没有渲染，所以值是 null。
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // 点击导入按钮时，模拟点击隐藏的文件输入框。
   function handleOpenImportFile() {
+    setImportError(null);
     fileInputRef.current?.click();
   }
 
@@ -36,20 +42,129 @@ function App() {
       // JSON.parse 将 JSON 字符串转换回 JavaScript 数据。
       const parsedData: unknown = JSON.parse(jsonText);
 
-      // 暂时告诉 TypeScript：我们相信导入的数据符合 Character 类型。
-      // 后续会使用 Zod 真正检查数据结构。
-      const importedCharacter = parsedData as Character;
+      // 使用 Zod 检查数据是否符合完整的角色结构。
+      const validationResult = characterSchema.safeParse(parsedData);
 
-      // 更新 state 后，React 会重新渲染角色卡。
-      setCharacter(importedCharacter);
+      if (!validationResult.success) {
+        // issues 中记录了字段位置、预期类型和实际问题。
+        console.error("角色数据校验失败：", validationResult.error.issues);
+
+        // 先显示第一个错误，避免一次展示太多信息。
+        const firstIssue = validationResult.error.issues[0];
+        const fieldPath = firstIssue?.path.join(".") || "未知字段";
+        const issueMessage = firstIssue?.message ?? "数据结构不符合要求";
+
+        setImportError(`导入失败：${fieldPath}，${issueMessage}`);
+        return;
+      }
+
+      // 校验成功后，data 是经过 Zod 检查的角色数据。
+      setImportError(null);
+      setCharacter(validationResult.data);
     } catch (error) {
       // JSON 格式错误时，JSON.parse 会抛出异常。
       console.error("导入 JSON 失败：", error);
-      window.alert("导入失败，请确认文件是有效的 JSON。");
+      setImportError("导入失败：文件无法读取或不是有效的 JSON。");
     } finally {
       // 清空 input，允许用户连续选择同一个文件。
       input.value = "";
     }
+  }
+
+  // 修改 profile 中的一个字符串字段。
+  function updateProfileField(
+    field: "name" | "title" | "summary",
+    value: string,
+  ) {
+    setCharacter((currentCharacter) => ({
+      ...currentCharacter,
+
+      profile: {
+        ...currentCharacter.profile,
+
+        // [field] 会使用参数中的字段名称。
+        [field]: value,
+      },
+    }));
+  }
+
+  // 修改 basics 中的一个字符串字段。
+  function updateBasicsField(
+    field: "species" | "className" | "level" | "origin" | "alignment",
+    value: string,
+  ) {
+    setCharacter((currentCharacter) => ({
+      // 保留其他角色数据。
+      ...currentCharacter,
+
+      basics: {
+        // 保留其他基础档案字段。
+        ...currentCharacter.basics,
+        [field]: value,
+      },
+    }));
+  }
+
+  // 修改某项资源的当前值或最大值。
+  function updateResourceValue(
+    resourceId: string,
+    field: "current" | "max",
+    value: number,
+  ) {
+    // 数字输入框为空时，valueAsNumber 会得到 NaN。
+    if (Number.isNaN(value)) {
+      return;
+    }
+
+    setCharacter((currentCharacter) => ({
+      ...currentCharacter,
+
+      resources: currentCharacter.resources.map((resource) => {
+        if (resource.id !== resourceId) {
+          return resource;
+        }
+
+        return {
+          ...resource,
+
+          // field 是 current 时修改当前值，是 max 时修改最大值。
+          [field]: value,
+        };
+      }),
+    }));
+  }
+
+  // 根据属性 id 修改某一项属性值。
+  function updateAttributeValue(attributeId: string, rawValue: string) {
+    setCharacter((currentCharacter) => ({
+      ...currentCharacter,
+
+      attributes: currentCharacter.attributes.map((attribute) => {
+        if (attribute.id !== attributeId) {
+          return attribute;
+        }
+
+        // 原值是数字时，继续保存为数字。
+        if (typeof attribute.value === "number") {
+          const numericValue = Number(rawValue);
+
+          if (Number.isNaN(numericValue)) {
+            return attribute;
+          }
+
+          return {
+            ...attribute,
+            value: numericValue,
+          };
+        }
+
+        // 原值是字符串时，继续保存为字符串。
+        return {
+          ...attribute,
+          value: rawValue,
+        };
+      }),
+    }));
   }
 
   // 将当前角色数据转换成 JSON 文件并下载。
@@ -105,9 +220,192 @@ function App() {
       </header>
 
       <section className="workspace">
-        <aside>
+        <aside className="editor-panel">
           <h2>编辑区</h2>
-          <p>后续会加入基础表单和 JSON 编辑器</p>
+
+          {/* 只有存在错误信息时才渲染错误提示。 */}
+          {importError ? (
+            <p className="import-error" role="alert">
+              {importError}
+            </p>
+          ) : null}
+
+          <div className="editor-form">
+            <div className="form-field">
+              <label htmlFor="character-name">角色名称</label>
+              <input
+                id="character-name"
+                type="text"
+                value={character.profile.name}
+                onChange={(event) =>
+                  updateProfileField("name", event.currentTarget.value)
+                }
+              />
+            </div>
+
+            <div className="form-field">
+              <label htmlFor="character-title">角色称号</label>
+              <input
+                id="character-title"
+                type="text"
+                value={character.profile.title}
+                onChange={(event) =>
+                  updateProfileField("title", event.currentTarget.value)
+                }
+              />
+            </div>
+
+            <div className="form-field">
+              <label htmlFor="character-summary">角色简介</label>
+              <textarea
+                id="character-summary"
+                rows={5}
+                value={character.profile.summary}
+                onChange={(event) =>
+                  updateProfileField("summary", event.currentTarget.value)
+                }
+              />
+            </div>
+
+            <div className="form-field">
+              <label htmlFor="character-species">种族</label>
+              <input
+                id="character-species"
+                type="text"
+                value={character.basics.species}
+                onChange={(event) =>
+                  updateBasicsField("species", event.currentTarget.value)
+                }
+              />
+            </div>
+
+            <div className="form-field">
+              <label htmlFor="character-class">职业</label>
+              <input
+                id="character-class"
+                type="text"
+                value={character.basics.className}
+                onChange={(event) =>
+                  updateBasicsField("className", event.currentTarget.value)
+                }
+              />
+            </div>
+
+            <div className="form-field">
+              <label htmlFor="character-level">等级</label>
+              <input
+                id="character-level"
+                type="text"
+                value={character.basics.level}
+                onChange={(event) =>
+                  updateBasicsField("level", event.currentTarget.value)
+                }
+              />
+            </div>
+
+            <div className="form-field">
+              <label htmlFor="character-origin">出身</label>
+              <input
+                id="character-origin"
+                type="text"
+                value={character.basics.origin}
+                onChange={(event) =>
+                  updateBasicsField("origin", event.currentTarget.value)
+                }
+              />
+            </div>
+
+            <div className="form-field">
+              <label htmlFor="character-alignment">阵营</label>
+              <input
+                id="character-alignment"
+                type="text"
+                value={character.basics.alignment}
+                onChange={(event) =>
+                  updateBasicsField("alignment", event.currentTarget.value)
+                }
+              />
+            </div>
+          </div>
+
+          <div className="resource-editor">
+            <h3>资源</h3>
+
+            {/* 根据资源数组自动生成输入框。 */}
+            {character.resources.map((resource) => (
+              <div className="resource-edit-item" key={resource.id}>
+                <h4>{resource.label}</h4>
+
+                <div className="resource-value-grid">
+                  <div className="form-field">
+                    <label htmlFor={`resource-${resource.id}-current`}>
+                      当前值
+                    </label>
+
+                    <input
+                      id={`resource-${resource.id}-current`}
+                      type="number"
+                      value={resource.current}
+                      onChange={(event) =>
+                        updateResourceValue(
+                          resource.id,
+                          "current",
+                          event.currentTarget.valueAsNumber,
+                        )
+                      }
+                    />
+                  </div>
+
+                  <div className="form-field">
+                    <label htmlFor={`resource-${resource.id}-max`}>
+                      最大值
+                    </label>
+
+                    <input
+                      id={`resource-${resource.id}-max`}
+                      type="number"
+                      value={resource.max}
+                      onChange={(event) =>
+                        updateResourceValue(
+                          resource.id,
+                          "max",
+                          event.currentTarget.valueAsNumber,
+                        )
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="attribute-editor">
+            <h3>属性</h3>
+
+            <div className="attribute-editor-grid">
+              {character.attributes.map((attribute) => (
+                <div className="form-field" key={attribute.id}>
+                  <label htmlFor={`attribute-${attribute.id}`}>
+                    {attribute.label}
+                  </label>
+
+                  <input
+                    id={`attribute-${attribute.id}`}
+                    type={
+                      typeof attribute.value === "number" ? "number" : "text"
+                    }
+                    value={attribute.value}
+                    onChange={(event) =>
+                      updateAttributeValue(
+                        attribute.id,
+                        event.currentTarget.value,
+                      )
+                    }
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
         </aside>
         <section className="preview-panel" aria-label="角色预览">
           <CharacterCard character={character} />

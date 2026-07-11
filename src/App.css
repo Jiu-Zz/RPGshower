@@ -356,3 +356,113 @@ dd {
     grid-template-columns: 1fr;
   }
 }
+
+/* JSON 导入失败时显示的错误提示。 */
+.editor-panel .import-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  color: #991b1b;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+}
+
+/* 编辑区中的单个表单字段。 */
+.form-field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+/* 表单字段名称。 */
+.form-field label {
+  color: #475569;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+/* 编辑表单中的多个字段纵向排列。 */
+.editor-form {
+  display: grid;
+  gap: 1rem;
+}
+
+/* 表单文本输入框。 */
+.form-field input,
+.form-field textarea {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  color: #1f2937;
+  font: inherit;
+  padding: 0.65rem 0.75rem;
+  width: 100%;
+}
+
+/* 键盘或鼠标聚焦输入框时突出显示。 */
+.form-field input:focus,
+.form-field textarea:focus {
+  border-color: #2563eb;
+  outline: 2px solid #bfdbfe;
+  outline-offset: 1px;
+}
+
+/* 简介文本框允许纵向调整高度。 */
+.form-field textarea {
+  min-height: 7rem;
+  resize: vertical;
+}
+
+/* 资源编辑区域与基础字段之间使用分隔线。 */
+.resource-editor {
+  border-top: 1px solid #e2e8f0;
+  display: grid;
+  gap: 1rem;
+  padding-top: 1rem;
+}
+
+/* 资源编辑区域标题。 */
+.resource-editor h3 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* 单项资源的名称和数值输入区域。 */
+.resource-edit-item {
+  display: grid;
+  gap: 0.65rem;
+}
+
+/* 资源名称，比如生命或法力。 */
+.resource-edit-item h4 {
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* 当前值和最大值并排显示。 */
+.resource-value-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* 属性编辑区域。 */
+.attribute-editor {
+  border-top: 1px solid #e2e8f0;
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+
+/* 属性编辑区域标题。 */
+.attribute-editor h3 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* 属性输入框使用双列布局。 */
+.attribute-editor-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}

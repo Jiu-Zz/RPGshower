@@ -1,76 +1,29 @@
-// 资源条可用的颜色。
-// 这里的值要和 CSS 类名对应，比如 red 对应 resource-fill-red。
-export type ResourceColor =
-  | "red"
-  | "blue"
-  | "green"
-  | "amber"
-  | "violet"
-  | "slate";
+import type { z } from "zod";
+import {
+  characterAttributeSchema,
+  characterBasicsSchema,
+  characterEquipmentSchema,
+  characterProfileSchema,
+  characterResourceSchema,
+  characterSchema,
+  characterSkillSchema,
+  resourceColorSchema,
+} from "./characterSchema";
 
-// 角色头部信息：名字、称号、头像文字、简介、标签。
-export type CharacterProfile = {
-  name: string;
-  title: string;
-  avatarText: string;
-  summary: string;
-  tags: string[];
-};
+// 根据 Zod schema 自动推导对应的 TypeScript 类型。
+// 以后修改 schema 时，这些类型也会自动更新。
+export type ResourceColor = z.infer<typeof resourceColorSchema>;
 
-// 角色基础档案信息。
-export type CharacterBasics = {
-  species: string;
-  className: string;
-  level: string;
-  origin: string;
-  alignment: string;
-};
+export type CharacterProfile = z.infer<typeof characterProfileSchema>;
 
-// 角色资源，比如生命、法力、理智。
-export type CharacterResource = {
-  id: string;
-  label: string;
-  current: number;
-  max: number;
-  color: ResourceColor;
-};
+export type CharacterBasics = z.infer<typeof characterBasicsSchema>;
 
-// 角色属性，比如力量、敏捷、智力。
-export type CharacterAttribute = {
-  id: string;
-  label: string;
-  value: number | string;
-};
+export type CharacterResource = z.infer<typeof characterResourceSchema>;
 
-// 装备条目。
-export type CharacterEquipment = {
-  id: string;
-  name: string;
-  type: string;
-  description: string;
-  equipped: boolean;
-  tags: string[];
-};
+export type CharacterAttribute = z.infer<typeof characterAttributeSchema>;
 
-// 技能条目。
-export type CharacterSkill = {
-  id: string;
-  name: string;
-  level: string;
-  cost: string;
-  description: string;
-  tags: string[];
-};
+export type CharacterEquipment = z.infer<typeof characterEquipmentSchema>;
 
-// 完整角色数据结构。
-// 后续 JSON 导入的数据，最终也应该符合这个形状。
-export type Character = {
-  schemaVersion: string;
-  id: string;
-  profile: CharacterProfile;
-  basics: CharacterBasics;
-  resources: CharacterResource[];
-  attributes: CharacterAttribute[];
-  equipment: CharacterEquipment[];
-  skills: CharacterSkill[];
-};
+export type CharacterSkill = z.infer<typeof characterSkillSchema>;
+
+export type Character = z.infer<typeof characterSchema>;
