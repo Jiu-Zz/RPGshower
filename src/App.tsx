@@ -4,7 +4,15 @@ import "./App.css";
 import { sampleCharacter } from "./data/sampleCharacter";
 import { characterSchema } from "./features/character/characterSchema";
 import type { Character } from "./features/character/characterTypes";
+import {
+  CharacterBasicsForm,
+  type EditableBasicsField,
+} from "./features/character/components/CharacterBasicsForm";
 import { CharacterCard } from "./features/character/components/CharacterCard";
+import {
+  CharacterProfileForm,
+  type EditableProfileField,
+} from "./features/character/components/CharacterProfileForm";
 
 function App() {
   // character 是当前角色，setCharacter 用来替换当前角色。
@@ -72,10 +80,7 @@ function App() {
   }
 
   // 修改 profile 中的一个字符串字段。
-  function updateProfileField(
-    field: "name" | "title" | "summary",
-    value: string,
-  ) {
+  function updateProfileField(field: EditableProfileField, value: string) {
     setCharacter((currentCharacter) => ({
       ...currentCharacter,
 
@@ -89,10 +94,7 @@ function App() {
   }
 
   // 修改 basics 中的一个字符串字段。
-  function updateBasicsField(
-    field: "species" | "className" | "level" | "origin" | "alignment",
-    value: string,
-  ) {
+  function updateBasicsField(field: EditableBasicsField, value: string) {
     setCharacter((currentCharacter) => ({
       // 保留其他角色数据。
       ...currentCharacter,
@@ -231,101 +233,15 @@ function App() {
           ) : null}
 
           <div className="editor-form">
-            <div className="form-field">
-              <label htmlFor="character-name">角色名称</label>
-              <input
-                id="character-name"
-                type="text"
-                value={character.profile.name}
-                onChange={(event) =>
-                  updateProfileField("name", event.currentTarget.value)
-                }
-              />
-            </div>
+            <CharacterProfileForm
+              profile={character.profile}
+              onFieldChange={updateProfileField}
+            />
 
-            <div className="form-field">
-              <label htmlFor="character-title">角色称号</label>
-              <input
-                id="character-title"
-                type="text"
-                value={character.profile.title}
-                onChange={(event) =>
-                  updateProfileField("title", event.currentTarget.value)
-                }
-              />
-            </div>
-
-            <div className="form-field">
-              <label htmlFor="character-summary">角色简介</label>
-              <textarea
-                id="character-summary"
-                rows={5}
-                value={character.profile.summary}
-                onChange={(event) =>
-                  updateProfileField("summary", event.currentTarget.value)
-                }
-              />
-            </div>
-
-            <div className="form-field">
-              <label htmlFor="character-species">种族</label>
-              <input
-                id="character-species"
-                type="text"
-                value={character.basics.species}
-                onChange={(event) =>
-                  updateBasicsField("species", event.currentTarget.value)
-                }
-              />
-            </div>
-
-            <div className="form-field">
-              <label htmlFor="character-class">职业</label>
-              <input
-                id="character-class"
-                type="text"
-                value={character.basics.className}
-                onChange={(event) =>
-                  updateBasicsField("className", event.currentTarget.value)
-                }
-              />
-            </div>
-
-            <div className="form-field">
-              <label htmlFor="character-level">等级</label>
-              <input
-                id="character-level"
-                type="text"
-                value={character.basics.level}
-                onChange={(event) =>
-                  updateBasicsField("level", event.currentTarget.value)
-                }
-              />
-            </div>
-
-            <div className="form-field">
-              <label htmlFor="character-origin">出身</label>
-              <input
-                id="character-origin"
-                type="text"
-                value={character.basics.origin}
-                onChange={(event) =>
-                  updateBasicsField("origin", event.currentTarget.value)
-                }
-              />
-            </div>
-
-            <div className="form-field">
-              <label htmlFor="character-alignment">阵营</label>
-              <input
-                id="character-alignment"
-                type="text"
-                value={character.basics.alignment}
-                onChange={(event) =>
-                  updateBasicsField("alignment", event.currentTarget.value)
-                }
-              />
-            </div>
+            <CharacterBasicsForm
+              basics={character.basics}
+              onFieldChange={updateBasicsField}
+            />
           </div>
 
           <div className="resource-editor">
