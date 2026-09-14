@@ -1,12 +1,5 @@
 import type { CharacterBasics } from "../characterTypes";
-
-// 基础档案表单允许编辑的字段。
-export type EditableBasicsField =
-  | "species"
-  | "className"
-  | "level"
-  | "origin"
-  | "alignment";
+import type { EditableBasicsField } from "../characterUpdates";
 
 type CharacterBasicsFormProps = {
   basics: CharacterBasics;

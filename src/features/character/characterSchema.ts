@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export const CURRENT_SCHEMA_VERSION = "0.1.0";
+
 // 资源条颜色
 export const resourceColorSchema = z.enum([
   "red",
@@ -32,9 +34,12 @@ export const characterBasicsSchema = z.object({
 export const characterResourceSchema = z.object({
   id: z.string(),
   label: z.string(),
-  current: z.number(),
-  max: z.number(),
+  current: z.number().nonnegative("当前值不能小于 0。"),
+  max: z.number().nonnegative("最大值不能小于 0。"),
   color: resourceColorSchema,
+}).refine((resource) => resource.current <= resource.max, {
+  message: "当前值不能超过最大值。",
+  path: ["current"],
 });
 
 // 角色属性的值既可以是数字，也可以是字符串。
@@ -64,9 +69,36 @@ export const characterSkillSchema = z.object({
   tags: z.array(z.string()),
 });
 
+export const characterRelationshipSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  relation: z.string(),
+  description: z.string(),
+});
+
+export const characterTimelineEventSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  description: z.string(),
+});
+
+export const characterArchiveSchema = z.object({
+  background: z.string().default(""),
+  appearance: z.string().default(""),
+  personality: z.string().default(""),
+  goals: z.array(z.string()).default([]),
+  relationships: z.array(characterRelationshipSchema).default([]),
+  timeline: z.array(characterTimelineEventSchema).default([]),
+  notes: z.string().default(""),
+});
+
+export const characterExtensionsSchema = z.record(z.string(), z.json());
+
 // 将前面的小型 schema 组合成完整的角色数据结构。
 export const characterSchema = z.object({
-  schemaVersion: z.string(),
+  schemaVersion: z.literal(CURRENT_SCHEMA_VERSION, {
+    error: `不支持的角色数据版本，仅支持 ${CURRENT_SCHEMA_VERSION}。`,
+  }),
   id: z.string(),
   profile: characterProfileSchema,
   basics: characterBasicsSchema,
@@ -76,4 +108,7 @@ export const characterSchema = z.object({
   attributes: z.array(characterAttributeSchema),
   equipment: z.array(characterEquipmentSchema),
   skills: z.array(characterSkillSchema),
+  // prefault 让旧文件缺失的档案也经过字段默认值处理。
+  archive: characterArchiveSchema.prefault({}),
+  extensions: characterExtensionsSchema.default({}),
 });

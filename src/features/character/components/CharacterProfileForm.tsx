@@ -1,7 +1,5 @@
 import type { CharacterProfile } from "../characterTypes";
-
-// 目前允许通过基础表单编辑的 profile 字段。
-export type EditableProfileField = "name" | "title" | "summary";
+import type { EditableProfileField } from "../characterUpdates";
 
 type CharacterProfileFormProps = {
   profile: CharacterProfile;

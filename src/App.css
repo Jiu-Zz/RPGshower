@@ -80,8 +80,51 @@ h1 {
 
 /* 顶部按钮区域 */
 .topbar-actions {
+  align-items: center;
   display: flex;
+  flex-wrap: wrap;
   gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.library-select-label {
+  color: #64748b;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.library-select {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #fff;
+  color: #1f2937;
+  font: inherit;
+  max-width: 14rem;
+  padding: 0.65rem 0.75rem;
+}
+
+/* 角色卡和档案之间的视图切换。 */
+.view-switch {
+  display: flex;
+}
+
+.view-tab {
+  border-radius: 0;
+}
+
+.view-tab:first-child {
+  border-radius: 6px 0 0 6px;
+}
+
+.view-tab:last-child {
+  border-left: 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.view-tab.active {
+  background: #1e3a5f;
+  border-color: #1e3a5f;
+  color: #ffffff;
 }
 
 /* 主工作区：左边编辑区，右边预览区 */
@@ -110,6 +153,48 @@ h1 {
   line-height: 1.7;
 }
 
+.editor-panel-heading,
+.json-editor-heading {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+}
+
+.editor-panel-heading {
+  margin-bottom: 1rem;
+}
+
+.editor-panel-heading h2 {
+  margin: 0;
+}
+
+.editor-mode-switch {
+  display: flex;
+}
+
+.editor-mode {
+  border-radius: 0;
+  font-size: 0.8rem;
+  padding: 0.4rem 0.6rem;
+}
+
+.editor-mode:first-child {
+  border-radius: 5px 0 0 5px;
+}
+
+.editor-mode:last-child {
+  border-left: 0;
+  border-radius: 0 5px 5px 0;
+}
+
+.editor-mode.active,
+.primary-button {
+  background: #1e3a5f;
+  border-color: #1e3a5f;
+  color: #fff;
+}
+
 /* 屏幕较窄时，顶部栏和工作区改成上下排列 */
 @media (max-width: 760px) {
   .app-shell {
@@ -123,6 +208,11 @@ h1 {
 
   .workspace {
     grid-template-columns: 1fr;
+  }
+
+  .topbar-actions {
+    justify-content: flex-start;
+    width: 100%;
   }
 }
 
@@ -313,6 +403,169 @@ dd {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+/* 档案页的标题和叙事信息区域。 */
+.archive-page-header {
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 0.25rem;
+  padding-bottom: 1.25rem;
+}
+
+.archive-page-header h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.archive-page-header p:last-child {
+  margin-bottom: 0;
+}
+
+.archive-overview-grid {
+  display: grid;
+  gap: 0 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.archive-section {
+  border-top: 1px solid #e2e8f0;
+  padding: 1.25rem 0;
+}
+
+.archive-section h3 {
+  font-size: 1rem;
+  margin: 0 0 0.75rem;
+}
+
+.archive-section p {
+  margin-bottom: 0;
+}
+
+.archive-empty {
+  color: #94a3b8 !important;
+  font-style: italic;
+}
+
+.archive-list {
+  display: grid;
+  gap: 0.65rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.archive-list li {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 0.75rem 0.85rem;
+}
+
+.archive-card-list strong,
+.archive-card-list span {
+  display: block;
+}
+
+.archive-card-list span {
+  color: #64748b;
+  font-size: 0.82rem;
+  margin-top: 0.2rem;
+}
+
+.archive-list p {
+  margin-top: 0.45rem;
+}
+
+.archive-timeline {
+  counter-reset: timeline;
+}
+
+.archive-timeline li {
+  counter-increment: timeline;
+}
+
+.archive-timeline li::before {
+  color: #2563eb;
+  content: counter(timeline, decimal-leading-zero);
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+}
+
+.json-editor-panel {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.json-editor-heading label {
+  color: #0f172a;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.sync-status {
+  color: #b45309;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.sync-status.synced {
+  color: #15803d;
+}
+
+.json-textarea {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  color: #e2e8f0;
+  font: 0.78rem/1.55 ui-monospace, SFMono-Regular, Consolas, monospace;
+  min-height: 31rem;
+  padding: 0.8rem;
+  resize: vertical;
+  width: 100%;
+}
+
+.json-textarea:focus {
+  border-color: #60a5fa;
+  outline: 2px solid #bfdbfe;
+  outline-offset: 1px;
+}
+
+.json-message {
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0.7rem 0.8rem;
+}
+
+.json-message.error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+
+.json-message.success {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+.json-message ul {
+  margin: 0.45rem 0 0;
+  padding-left: 1.1rem;
+}
+
+.json-editor-actions {
+  display: flex;
+  gap: 0.65rem;
+  justify-content: flex-end;
+}
+
+button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
 /* 条目列表：去掉浏览器默认圆点和缩进 */
 .item-list {
   display: grid;
@@ -355,6 +608,10 @@ dd {
   .two-column-section {
     grid-template-columns: 1fr;
   }
+
+  .archive-overview-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* JSON 导入失败时显示的错误提示。 */
@@ -383,6 +640,11 @@ dd {
 
 /* 编辑表单中的多个字段纵向排列。 */
 .editor-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.basic-editor {
   display: grid;
   gap: 1rem;
 }

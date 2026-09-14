@@ -1,12 +1,16 @@
 import type { z } from "zod";
 import {
+  characterArchiveSchema,
   characterAttributeSchema,
   characterBasicsSchema,
   characterEquipmentSchema,
+  characterExtensionsSchema,
   characterProfileSchema,
   characterResourceSchema,
+  characterRelationshipSchema,
   characterSchema,
   characterSkillSchema,
+  characterTimelineEventSchema,
   resourceColorSchema,
 } from "./characterSchema";
 
@@ -25,5 +29,13 @@ export type CharacterAttribute = z.infer<typeof characterAttributeSchema>;
 export type CharacterEquipment = z.infer<typeof characterEquipmentSchema>;
 
 export type CharacterSkill = z.infer<typeof characterSkillSchema>;
+
+export type CharacterRelationship = z.infer<typeof characterRelationshipSchema>;
+
+export type CharacterTimelineEvent = z.infer<typeof characterTimelineEventSchema>;
+
+export type CharacterArchive = z.infer<typeof characterArchiveSchema>;
+
+export type CharacterExtensions = z.infer<typeof characterExtensionsSchema>;
 
 export type Character = z.infer<typeof characterSchema>;

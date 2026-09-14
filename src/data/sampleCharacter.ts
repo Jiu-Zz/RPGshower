@@ -97,4 +97,27 @@ export const sampleCharacter: Character = {
       tags: ["知识", "探索"],
     },
   ],
+  archive: {
+    background: "出生于北境边城，自幼对星象敏感。",
+    appearance: "银灰色长发，常披深蓝斗篷。",
+    personality: "冷静、好奇，但不轻易信任他人。",
+    goals: ["寻找失落星图", "查明导师失踪的真相"],
+    relationships: [
+      {
+        id: "mentor",
+        name: "塞拉斯",
+        relation: "导师",
+        description: "失踪的星象学者。",
+      },
+    ],
+    timeline: [
+      {
+        id: "event-1",
+        title: "离开北境",
+        description: "踏上寻找导师的旅程。",
+      },
+    ],
+    notes: "",
+  },
+  extensions: {},
 };
